@@ -1,0 +1,56 @@
+# thymeleaf
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    # druid
+  datasource:
+    url: jdbc:mysql://localhost:3306/miaosha?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 数据库连接池属性
+    # 统计状态
+    filters: stat
+    # 最大活动连接
+    maxActive: 2
+    # 初始连接池大小
+    initialSize: 1
+    # 最大等待时间
+    maxWait: 60000
+    # 最小的空闲连接
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+# redis
+redis:
+  host: localhost
+  port: 6379
+  timeout: 3
+  # 连接池属性
+  poolMaxTotal: 10
+  poolMaxIdle: 10
+  poolMaxWait: 3
+
+
+# mybatis
+mybatis:
+  type-aliases-package: com.todorex.miaosha.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 3000
+  mapper-locations: classpath:com/todorex/miaosha/dao/*.xml
+
