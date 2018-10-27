@@ -34,4 +34,13 @@ public interface MiaoShaUserService {
      * @return
      */
     public MiaoShaUser getByToken(HttpServletResponse response, String token);
+
+    /**
+     * 修改密码
+     * @param token
+     * @param id
+     * @param formPassword
+     * @return
+     */
+    public boolean updatePassword(String token, long id, String formPassword);
 }

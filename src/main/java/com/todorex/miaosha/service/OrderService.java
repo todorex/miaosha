@@ -26,4 +26,11 @@ public interface OrderService {
      * @return
      */
     public OrderInfo createOrder(MiaoShaUser user, ProductVo product);
+
+    /**
+     * 根据订单ID查询订单
+     * @param orderId
+     * @return
+     */
+    public OrderInfo getOrderById(long orderId);
 }

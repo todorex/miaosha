@@ -20,4 +20,7 @@ public interface OrderDao {
 
     @Insert("insert into miaosha_order (user_id, product_id, order_id)values(#{userId}, #{productId}, #{orderId})")
     public int insertMiaoshaOrder(MiaoShaOrder miaoshaOrder);
+
+    @Select("select * from order_info where id = #{orderId}")
+    public OrderInfo getOrderById(@Param("orderId")long orderId);
 }

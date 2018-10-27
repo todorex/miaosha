@@ -33,7 +33,10 @@ public class CodeMsg {
 
     //商品模块 5003XX
 
-    //订单模块 5004XX
+    /**
+     *  订单模块 5004XX
+     */
+    public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(500400, "订单不存在");
 
     /**
      * 秒杀模块 5005XX

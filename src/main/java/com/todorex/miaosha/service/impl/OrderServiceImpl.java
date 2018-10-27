@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public MiaoShaOrder getMiaoShaOrderByUserIdAndProductId(Long userId, long productId) {
-
+        // 可以放到缓存中以提交QPS
         return orderDao.getMiaoShaOrderByUserIdAndproductId(userId, productId);
     }
 
@@ -48,5 +48,10 @@ public class OrderServiceImpl implements OrderService {
         miaoshaOrder.setUserId(user.getId());
         orderDao.insertMiaoshaOrder(miaoshaOrder);
         return orderInfo;
+    }
+
+    @Override
+    public OrderInfo getOrderById(long orderId) {
+        return orderDao.getOrderById(orderId);
     }
 }

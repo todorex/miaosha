@@ -65,7 +65,7 @@ public class ProductController {
     }
 
 
-    @RequestMapping("/detail/{productId}", produces = "text/html")
+    @RequestMapping(value = "/detail/{productId}", produces = "text/html")
     @ResponseBody
     public String detail(HttpServletRequest request,
                          HttpServletResponse response,
@@ -79,11 +79,11 @@ public class ProductController {
             return html;
         }
         //手动渲染
-        ProductVo goods = productService.getProductVoByProductId(productId);
-        model.addAttribute("goods", goods);
+        ProductVo product = productService.getProductVoByProductId(productId);
+        model.addAttribute("product", product);
 
-        long startAt = goods.getStartDate().getTime();
-        long endAt = goods.getEndDate().getTime();
+        long startAt = product.getStartDate().getTime();
+        long endAt = product.getEndDate().getTime();
         long now = System.currentTimeMillis();
 
         // 秒杀状态

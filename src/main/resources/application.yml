@@ -1,5 +1,16 @@
 # thymeleaf
 spring:
+  # static
+  resources:
+    add-mappings: true
+    chain:
+      cache: true
+      gzipped: true
+      html-application-cache: true
+    static-locations: classpath:/static/
+    cache:
+      cachecontrol:
+        max-age: 3600
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -53,4 +64,5 @@ mybatis:
     default-fetch-size: 100
     default-statement-timeout: 3000
   mapper-locations: classpath:com/todorex/miaosha/dao/*.xml
+
 

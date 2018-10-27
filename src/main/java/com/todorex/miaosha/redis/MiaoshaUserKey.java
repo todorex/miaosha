@@ -15,4 +15,10 @@ public class MiaoshaUserKey extends BasePrefix {
         super(expireSeconds, prefix);
     }
     public static MiaoshaUserKey token = new MiaoshaUserKey(TOKEN_EXPIRE, "token");
+
+    /**
+     * 对象缓存不设置有效期
+     * 希望它是永久有效的（只要没有发生变化）
+     */
+    public static MiaoshaUserKey getById = new MiaoshaUserKey(0, "id");
 }
