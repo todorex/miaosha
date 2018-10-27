@@ -8,4 +8,4 @@ CREATE TABLE `miaosha_user` (
   `last_login_date` datetime DEFAULT NULL COMMENT '上次登录时间',
   `login_count` int(11) DEFAULT '0' COMMENT '登录次数',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
