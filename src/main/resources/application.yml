@@ -18,13 +18,13 @@ spring:
     # 统计状态
     filters: stat
     # 最大活动连接
-    maxActive: 2
+    maxActive: 1000
     # 初始连接池大小
-    initialSize: 1
+    initialSize: 100
     # 最大等待时间
     maxWait: 60000
     # 最小的空闲连接
-    minIdle: 1
+    minIdle: 500
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
     validationQuery: select 'x'
@@ -40,9 +40,9 @@ redis:
   port: 6379
   timeout: 3
   # 连接池属性
-  poolMaxTotal: 10
-  poolMaxIdle: 10
-  poolMaxWait: 3
+  poolMaxTotal: 1000
+  poolMaxIdle: 100
+  poolMaxWait: 500
 
 
 # mybatis

@@ -1,18 +1,21 @@
 package com.todorex.miaosha.controller;
 
 import com.todorex.miaosha.domain.MiaoShaUser;
+import com.todorex.miaosha.redis.ProductKey;
+import com.todorex.miaosha.redis.RedisService;
 import com.todorex.miaosha.service.MiaoShaUserService;
 import com.todorex.miaosha.service.ProductService;
 import com.todorex.miaosha.vo.ProductVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -30,13 +33,35 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping("list")
-    public String productList(Model model, MiaoShaUser user) {
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private ThymeleafViewResolver thymeleafViewResolver;
+
+
+
+    @RequestMapping(value = "list", produces = "text/html")
+    @ResponseBody
+    public String productList(HttpServletRequest request, HttpServletResponse response, Model model, MiaoShaUser user) {
         model.addAttribute("user", user);
+
+        String html = redisService.get(ProductKey.getProductList, "",  String.class);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
         // 查询商品列表
         List<ProductVo> productVoList = productService.listProductVo();
         model.addAttribute("productVoList", productVoList);
-        return "product_list";
+
+        WebContext context = new WebContext(request,response,
+                request.getServletContext(),request.getLocale(), model.asMap());
+        // 如果为空，手动渲染
+        html = thymeleafViewResolver.getTemplateEngine().process("product_list", context);
+        if (!StringUtils.isEmpty(html)) {
+            redisService.set(ProductKey.getProductList, "", html);
+        }
+        return html;
     }
 
 
