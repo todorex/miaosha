@@ -18,4 +18,6 @@ public class ProductKey extends BasePrefix{
      * 1分钟
      */
     public static ProductKey getProductList = new ProductKey(60, "pl");
+
+    public static ProductKey getProductDetail = new ProductKey(60, "pd");
 }

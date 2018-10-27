@@ -65,21 +65,30 @@ public class ProductController {
     }
 
 
-    @RequestMapping("/detail/{productId}")
-    public String detail(Model model,MiaoShaUser user,
+    @RequestMapping("/detail/{productId}", produces = "text/html")
+    @ResponseBody
+    public String detail(HttpServletRequest request,
+                         HttpServletResponse response,
+                         Model model,MiaoShaUser user,
                          @PathVariable("productId")long productId) {
         model.addAttribute("user", user);
 
-        ProductVo productVo = productService.getProductVoByProductId(productId);
-        model.addAttribute("product", productVo);
+        //取缓存
+        String html = redisService.get(ProductKey.getProductDetail, ""+ productId, String.class);
+        if(!StringUtils.isEmpty(html)) {
+            return html;
+        }
+        //手动渲染
+        ProductVo goods = productService.getProductVoByProductId(productId);
+        model.addAttribute("goods", goods);
 
-        long startAt = productVo.getStartDate().getTime();
-        long endAt = productVo.getEndDate().getTime();
+        long startAt = goods.getStartDate().getTime();
+        long endAt = goods.getEndDate().getTime();
         long now = System.currentTimeMillis();
 
         // 秒杀状态
         int miaoshaStatus = 0;
-        // 还有多少秒开始
+        // 秒杀剩余时间
         int remainSeconds = 0;
         if(now < startAt ) {
             //秒杀还没开始，倒计时
@@ -96,6 +105,15 @@ public class ProductController {
         }
         model.addAttribute("miaoshaStatus", miaoshaStatus);
         model.addAttribute("remainSeconds", remainSeconds);
-        return "product_detail";
+
+
+        WebContext context = new WebContext(request,response,
+                request.getServletContext(),request.getLocale(), model.asMap());
+
+        html = thymeleafViewResolver.getTemplateEngine().process("product_detail", context);
+        if(!StringUtils.isEmpty(html)) {
+            redisService.set(ProductKey.getProductDetail, ""+ productId, html);
+        }
+        return html;
     }
 }
