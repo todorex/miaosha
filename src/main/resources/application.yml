@@ -44,6 +44,29 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
+  # rabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 10
+        # 每次从队列中取几个
+        prefetch: 1
+        auto-startup: true
+        default-requeue-rejected: true
+        # 队列满了重试
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 3
+          max-interval: 10000
+          # 每次等待倍数
+          multiplier: 1.0
 
 # redis
 redis:
@@ -64,5 +87,7 @@ mybatis:
     default-fetch-size: 100
     default-statement-timeout: 3000
   mapper-locations: classpath:com/todorex/miaosha/dao/*.xml
+
+
 
 

@@ -1,6 +1,6 @@
 package com.todorex.miaosha.redis;
 
-import com.todorex.miaosha.domain.User;
+
 
 /**
  * @Author rex
