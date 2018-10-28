@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface MiaoShaUserService {
 
+    public static final String COOKIE_NAME_TOKEN = "token";
     /**
      * 根据用户ID获取用户
      * @param id

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public class MiaoShaUserServiceImpl implements MiaoShaUserService {
 
-    public static final String COOKIE_NAME_TOKEN = "token";
+
 
     @Autowired
     private MiaoShaUserDao miaoShaUserDao;

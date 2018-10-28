@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>商品详情</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- jquery -->
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <!-- bootstrap -->
-    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}"/>
     <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
     <!-- jquery-validator -->
     <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
@@ -33,22 +33,34 @@
         </tr>
         <tr>
             <td>商品图片</td>
-            <td colspan="3"><img th:src="@{${product.productImg}}" width="200" height="200" /></td>
+            <td colspan="3"><img th:src="@{${product.productImg}}" width="200" height="200"/></td>
         </tr>
         <tr>
             <td>秒杀开始时间</td>
             <td th:text="${#dates.format(product.startDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td id="miaoshaTip">
-                <input type="hidden" id="remainSeconds" th:value="${remainSeconds}" />
-                <span th:if="${miaoshaStatus eq 0}">秒杀倒计时：<span id="countDown" th:text="${remainSeconds}"></span>秒</span>
+                <input type="hidden" id="remainSeconds" th:value="${remainSeconds}"/>
+                <span th:if="${miaoshaStatus eq 0}">秒杀倒计时：<span id="countDown"
+                                                                th:text="${remainSeconds}"></span>秒</span>
                 <span th:if="${miaoshaStatus eq 1}">秒杀进行中</span>
                 <span th:if="${miaoshaStatus eq 2}">秒杀已结束</span>
             </td>
             <td>
-                <form id="miaoshaForm" method="post" action="/miaosha">
-                    <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
-                    <input type="hidden" name="productId" th:value="${product.id}" />
-                </form>
+
+                <div class="row">
+                    <div class="form-inline">
+                        <img id="verifyCodeImg" width="80" height="32" style="display:none"
+                             onclick="refreshVerifyCode()"/>
+                        <input id="verifyCode" class="form-control" style="display:none"/>
+                        <form id="miaoshaForm" method="post" action="/miaosha" >
+                            <button class="btn btn-primary" type="button" id="buyButton"
+                                    onclick="getMiaoshaPath()">立即秒杀
+                            </button>
+                            <input type="hidden" name="productId" id="productId" th:value="${product.id}"/>
+                        </form>
+                    </div>
+                </div>
+
             </td>
         </tr>
         <tr>
@@ -67,34 +79,92 @@
 </div>
 </body>
 <script>
-    $(function(){
+    $(function () {
         countDown();
     });
 
-    function countDown(){
+
+    // 倒计时
+    function countDown() {
         var remainSeconds = $("#remainSeconds").val();
         var timeout;
-        if(remainSeconds > 0){
+        if (remainSeconds > 0) {
             //秒杀还没开始，倒计时
             $("#buyButton").attr("disabled", true);
-            timeout = setTimeout(function(){
+            timeout = setTimeout(function () {
                 $("#countDown").text(remainSeconds - 1);
                 $("#remainSeconds").val(remainSeconds - 1);
                 countDown();
-            },1000);
-        }else if(remainSeconds == 0){
+            }, 1000);
+        } else if (remainSeconds == 0) {
             //秒杀进行中
             $("#buyButton").attr("disabled", false);
-            if(timeout){
+            if (timeout) {
                 clearTimeout(timeout);
             }
             $("#miaoshaTip").html("秒杀进行中");
-        }else{
+            var verifyCodeImg = $("#verifyCodeImg");
+            verifyCodeImg.attr("src", "/miaosha/verifyCode?productId="+$("#productId").val());
+            verifyCodeImg.show();
+            $("#verifyCode").show();
+        } else {
             //秒杀已经结束
             $("#buyButton").attr("disabled", true);
             $("#miaoshaTip").html("秒杀已经结束");
         }
     }
 
+    function getMiaoshaPath() {
+        var productId = $("#productId").val();
+        var form = $("#miaoshaForm");
+//        g_showLoading();
+        $.ajax({
+            url: "/miaosha/path",
+            type: "GET",
+            data: {
+                productId: productId,
+                verifyCode:$("#verifyCode").val()
+            },
+            success: function (data) {
+                if (data.code == 0) {
+                    var path = data.data;
+                    console.log(path);
+                    var newPath = "/miaosha/" + path;
+                    form.attr('action', newPath);
+                    form.submit();
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+
+
+    function doMiaosha(path) {
+        $.ajax({
+            url: "/miaosha/" + path,
+            type: "POST",
+            data: {
+                productId: $("#productId").val()
+            },
+            success: function (data) {
+//                if (data.code == 0) {
+//                    window.location.href="/order_detail.htm?orderId="+data.data.id;
+//                    getMiaoShaResult($("#productId").val());
+//                } else {
+//                    layer.msg(data.msg);
+//                }
+            },
+            error: function () {
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+    function refreshVerifyCode(){
+        $("#verifyCodeImg").attr("src", "/miaosha/verifyCode?productId="+$("#productId").val()+"&timestamp="+new Date().getTime());
+    }
 </script>
 </html>

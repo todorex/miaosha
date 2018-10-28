@@ -19,7 +19,13 @@ public class ProductKey extends BasePrefix{
      */
     public static ProductKey getProductList = new ProductKey(60, "pl");
 
+    /**
+     * 商品详情前缀
+     */
     public static ProductKey getProductDetail = new ProductKey(60, "pd");
 
+    /**
+     * 秒杀商品库存前缀
+     */
     public static ProductKey getMiaoShaProductStock= new ProductKey(0, "ps");
 }
