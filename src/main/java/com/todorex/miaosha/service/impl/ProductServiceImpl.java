@@ -33,9 +33,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void reduceStock(ProductVo product) {
+    public boolean reduceStock(ProductVo product) {
         MiaoShaProduct p = new MiaoShaProduct();
-        p.setId(product.getId());
-        productDao.reduceStock(p);
+        p.setProductId(product.getId());
+        int ret = productDao.reduceStock(p);
+        return ret > 0;
     }
 }

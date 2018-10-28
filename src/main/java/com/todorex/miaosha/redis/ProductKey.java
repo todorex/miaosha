@@ -20,4 +20,6 @@ public class ProductKey extends BasePrefix{
     public static ProductKey getProductList = new ProductKey(60, "pl");
 
     public static ProductKey getProductDetail = new ProductKey(60, "pd");
+
+    public static ProductKey getMiaoShaProductStock= new ProductKey(0, "ps");
 }

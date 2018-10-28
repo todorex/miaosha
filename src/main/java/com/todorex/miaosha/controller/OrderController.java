@@ -38,21 +38,14 @@ public class OrderController {
     ProductService productServicel;
 
     @RequestMapping("/detail")
-    @ResponseBody
-    public Result<OrderDetailVo> info(Model model, MiaoShaUser user,
-                                      @RequestParam("orderId") long orderId) {
-        if(user == null) {
-            return Result.failure(CodeMsg.SESSION_ERROR);
-        }
+    public String info(Model model, MiaoShaUser user,
+                       @RequestParam("orderId") long orderId) {
+
         OrderInfo order = orderService.getOrderById(orderId);
-        if(order == null) {
-            return Result.failure(CodeMsg.ORDER_NOT_EXIST);
-        }
         long productId = order.getProductId();
         ProductVo product = productServicel.getProductVoByProductId(productId);
-        OrderDetailVo vo = new OrderDetailVo();
-        vo.setOrder(order);
-        vo.setProductVo(product);
-        return Result.success(vo);
+        model.addAttribute("orderInfo", order);
+        model.addAttribute("product", product);
+        return "order_detail";
     }
 }

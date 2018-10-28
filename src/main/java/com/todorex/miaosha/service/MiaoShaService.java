@@ -17,4 +17,16 @@ public interface MiaoShaService {
      * @return
      */
     OrderInfo miaosha(MiaoShaUser user, ProductVo product);
+
+    /**
+     * 根据用户ID和商品ID
+     * 查看秒杀结果
+     * orderId：成功
+     * -1：秒杀失败
+     * 0： 排队中
+     * @param id
+     * @param productId
+     * @return
+     */
+    long getMiaoShaResult(Long id, long productId);
 }

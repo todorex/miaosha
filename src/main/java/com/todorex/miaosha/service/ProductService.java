@@ -27,5 +27,5 @@ public interface ProductService {
      * 减库存
      * @param product
      */
-    public void reduceStock(ProductVo product);
+    public boolean reduceStock(ProductVo product);
 }
